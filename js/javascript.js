@@ -1,20 +1,28 @@
 window.onload = function() {
 	var searchBtn = document.querySelector("#search-btn");
 	var httpRequest;
-	
+	var searchItem = document.getElementById("search");
+	var resultcont = document.getElementById("result");
 	searchBtn.addEventListener("click", function(e) {
 		e.preventDefault();
-		httpRequest = new XMLHttpRequest();
+		var textVal = searchItem.value;
+		if(textVal != ""){
+			httpRequest = new XMLHttpRequest();
+			httpRequest.onreadystatechange = alertMsg;
+			var url = "request.php?q=" + textVal;
+	    	httpRequest.open("GET", url);
+	    	httpRequest.send();
+		}
+		else{
+			resultcont.innerHTML = "Please enter a text in the search bar";
+		}
 		
-		httpRequest.onreadystatechange = alertMsg;
-    	httpRequest.open("GET", "request.php?q=definition");
-    	httpRequest.send();
 	});
 	function alertMsg(){
 		if (httpRequest.readyState === XMLHttpRequest.DONE){
 			if (httpRequest.status === 200) {
-				alert(httpRequest.responseText);
+				resultcont.innerHTML = httpRequest.responseText;
 			}
 		}
-	};
+	}
 };
